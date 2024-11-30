@@ -102,21 +102,20 @@
 % songs
 \newcounter{songblock}
 \newenvironment{song}{
-    \setcounter{\songblock}{0}
+    % \setcounter{\songblock}{0}
     \newpage
 }{
     \newpage
 }
+\newcounter{stanza}
+\newenvironment{songblock}[2][]{
+    % \ifthenelse{\thesongblock=0}{\vspace{1em}}{}
+    % \stepcounter{\songblock}
+    \ifthenelse{\isempty{#1}}{\charname{#2}}{\charname[#1]{#2}}
+    \setcounter{stanza}{0}
+}{}
 
-% \newenvironment{songblock}[2]{
-%     \ifnum\thesongblock=0\relax
-%     \else \vspace{1em}
-%     \fi
-%     \stepcounter{\songblock}
-%     \charname{#2}{#1}
-% }{}
 
-% lyrics
 \newenvironment{lyricsa}{
     \begin{adjustwidth}{0.5in}{0in}
 }{
@@ -135,16 +134,12 @@
     \end{adjustwidth}
 }
 
-% stanzas
-\newenvironment{stanza}{%
-    \begin{list}{}{%
-        \setlength{\leftmargin}{0pt}% No indentation
-        \setlength{\itemindent}{0pt}% No additional indentation for items
-        \setlength{\itemsep}{0pt}% No extra space between items
-    }%
-}{%
-    \end{list}%
+\newenvironment{stanza}{
+    \ifthenelse{\thestanza=0}{}{\vspace{1em}}
+    \stepcounter{stanza}
+    \begin{itemize}[itemsep=0pt, parsep=0pt, partopsep=0pt, left=0pt, topsep=0pt, label=, labelsep=0pt]
+}{
+    \end{itemize}
 }
 
-% lines
 \newcommand{\words}[1]{\item \MakeUppercase{#1}}
