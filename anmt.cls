@@ -26,7 +26,7 @@
 % header
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
-\fancyhead{}
+\fancyhead[R]{\thepage}
 
 % footer
 \usdate
@@ -62,7 +62,11 @@
         \underline{Scene \Numberstringnum{\thescene}}
     \end{adjustwidth}
     % Update header
-    \fancyhead[R]{\rnum{\theact}-\thescene-\thepage}
+    \ifthenelse{\theact=0}{
+        \fancyhead[R]{\thescene-\thepage}
+    }{
+        \fancyhead[R]{\rnum{\theact}-\thescene-\thepage}
+    }
 }
 
 % initial stage directions
