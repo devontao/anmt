@@ -9,6 +9,7 @@
 \RequirePackage{fmtcount}
 \RequirePackage{enumitem}
 \RequirePackage{datetime}
+\RequirePackage{xifthen}
 \newcommand{\rnum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 
 % set font to courier
@@ -41,7 +42,6 @@
     \setcounter{scene}{0}
     \begin{adjustwidth}{3in}{0in}
         \underline{ACT \NUMBERstringnum{\theact}}
-        \vspace{1em}
     \end{adjustwidth}
 }
 
@@ -53,9 +53,9 @@
         \newpage
     \fi
     \stepcounter{scene}
+    \vspace{1em}
     \begin{adjustwidth}{3in}{0in}
         \underline{Scene \Numberstringnum{\thescene}}
-        \vspace{1em}
     \end{adjustwidth}
     % Update header
     \fancyhead[R]{\rnum{\theact}-\thescene-\thepage}
@@ -63,10 +63,14 @@
 
 % initial stage directions
 \newcommand{\init}[1]{
+    \vspace{1em}
     \begin{adjustwidth}{3in}{0in}
         #1
-        \newline
     \end{adjustwidth}
+}
+
+\newcommand{\absoluteindent}[1]{%
+    \noindent\hspace*{-\leftmargin}\hspace*{#1}%
 }
 
 % stage direction
@@ -74,40 +78,73 @@
     \begin{adjustwidth}{1in}{1in}
         \vspace{1em}
         (#1)
-        \vspace{1em}
     \end{adjustwidth}
 }
 
 % aside
 \newcommand{\aside}[1]{
     \begin{adjustwidth}{1in}{1in}
-        (\lowercase{#1})
+        ({#1})
     \end{adjustwidth}
 }
 
+\newlength{\currindent}
+
 % character name
-\newcommand{\charname}[1]{
+\newcommand{\charname}[2][]{
     \begin{adjustwidth}{3in}{0in}
         \vspace{1em}
-        #1
+        \MakeUppercase{#2}
+        \ifthenelse{\isempty{#1}}{}{(#1)}
     \end{adjustwidth}
 }
 
 % songs
+\newcounter{songblock}
 \newenvironment{song}{
+    \setcounter{\songblock}{0}
     \newpage
 }{
     \newpage
 }
 
+% \newenvironment{songblock}[2]{
+%     \ifnum\thesongblock=0\relax
+%     \else \vspace{1em}
+%     \fi
+%     \stepcounter{\songblock}
+%     \charname{#2}{#1}
+% }{}
+
 % lyrics
-\newenvironment{lyrics}{
+\newenvironment{lyricsa}{
     \begin{adjustwidth}{0.5in}{0in}
 }{
     \end{adjustwidth}
 }
 
-\newcommand{\stanza}[1]{
-    \MakeUppercase{#1}
-    \vspace{1em}
+\newenvironment{lyricsb}{
+    \begin{adjustwidth}{1in}{0in}
+}{
+    \end{adjustwidth}
 }
+
+\newenvironment{lyricsc}{
+    \begin{adjustwidth}{1.5in}{0in}
+}{
+    \end{adjustwidth}
+}
+
+% stanzas
+\newenvironment{stanza}{%
+    \begin{list}{}{%
+        \setlength{\leftmargin}{0pt}% No indentation
+        \setlength{\itemindent}{0pt}% No additional indentation for items
+        \setlength{\itemsep}{0pt}% No extra space between items
+    }%
+}{%
+    \end{list}%
+}
+
+% lines
+\newcommand{\words}[1]{\item \MakeUppercase{#1}}
