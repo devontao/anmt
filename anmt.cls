@@ -14,12 +14,13 @@
 
 % set font to courier
 \renewcommand{\rmdefault}{pcr}
-\renewcommand{\baselinestretch}{0.9}
+\newcommand{\br}{\vspace{1em}}
+\linespread{0.8}
 
 % spacing
 \raggedright
 \EverySelectfont{%
-    \fontdimen2\font=0.6em% interword space
+    \fontdimen2\font=0.5em% interword space
 }
 
 % header
@@ -35,9 +36,12 @@
     \today
 }
 
+\newcommand{\underscoring}{\newpage}
+
 % acts
 \newcounter{act}
 \newcommand{\act}{
+    \ifthenelse{\theact=0}{}{\newpage}
     \stepcounter{act}
     \setcounter{scene}{0}
     \begin{adjustwidth}{3in}{0in}
@@ -53,7 +57,7 @@
         \newpage
     \fi
     \stepcounter{scene}
-    \vspace{1em}
+    \br
     \begin{adjustwidth}{3in}{0in}
         \underline{Scene \Numberstringnum{\thescene}}
     \end{adjustwidth}
@@ -63,7 +67,7 @@
 
 % initial stage directions
 \newcommand{\init}[1]{
-    \vspace{1em}
+    \br
     \begin{adjustwidth}{3in}{0in}
         #1
     \end{adjustwidth}
@@ -76,7 +80,7 @@
 % stage direction
 \newcommand{\stagedir}[1]{
     \begin{adjustwidth}{1in}{1in}
-        \vspace{1em}
+        \br
         (#1)
     \end{adjustwidth}
 }
@@ -93,7 +97,7 @@
 % character name
 \newcommand{\charname}[2][]{
     \begin{adjustwidth}{3in}{0in}
-        \vspace{1em}
+        \br
         \MakeUppercase{#2}
         \ifthenelse{\isempty{#1}}{}{(#1)}
     \end{adjustwidth}
@@ -102,16 +106,18 @@
 % songs
 \newcounter{songblock}
 \newenvironment{song}{
-    % \setcounter{\songblock}{0}
+    \setcounter{songblock}{0}
     \newpage
 }{
     \newpage
 }
 \newcounter{stanza}
-\newenvironment{songblock}[2][]{
-    % \ifthenelse{\thesongblock=0}{\vspace{1em}}{}
-    % \stepcounter{\songblock}
-    \ifthenelse{\isempty{#1}}{\charname{#2}}{\charname[#1]{#2}}
+\newenvironment{songblock}[1]{
+    \ifthenelse{\thesongblock=0}{}{\br}
+    \stepcounter{songblock}
+    \begin{adjustwidth}{3in}{0in}
+        #1
+    \end{adjustwidth}
     \setcounter{stanza}{0}
 }{}
 
@@ -135,7 +141,7 @@
 }
 
 \newenvironment{stanza}{
-    \ifthenelse{\thestanza=0}{}{\vspace{1em}}
+    \ifthenelse{\thestanza=0}{}{\br}
     \stepcounter{stanza}
     \begin{itemize}[itemsep=0pt, parsep=0pt, partopsep=0pt, left=0pt, topsep=0pt, label=, labelsep=0pt]
 }{
@@ -143,3 +149,9 @@
 }
 
 \newcommand{\words}[1]{\item \MakeUppercase{#1}}
+
+\newcommand{\theend}{
+    \begin{adjustwidth}{3in}{0in}
+        \underline{THE END}
+    \end{adjustwidth}
+}
