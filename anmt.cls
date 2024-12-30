@@ -10,6 +10,8 @@
 \RequirePackage{enumitem}
 \RequirePackage{datetime}
 \RequirePackage{xifthen}
+\RequirePackage{multicol}
+
 \newcommand{\rnum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 
 % set font to courier
@@ -44,6 +46,7 @@
     \ifthenelse{\theact=0}{}{\newpage}
     \stepcounter{act}
     \setcounter{scene}{0}
+    \setcounter{page}{1}
     \begin{adjustwidth}{3in}{0in}
         \underline{ACT \NUMBERstringnum{\theact}}
     \end{adjustwidth}
@@ -118,36 +121,90 @@
 \newcounter{stanza}
 \newenvironment{songblock}[1]{
     \ifthenelse{\thesongblock=0}{}{\br}
+    \ifdefined\intwocol
+            \ifdefined\leftcol
+            \begin{adjustwidth}{1.5in}{0in}
+        \else
+            \begin{adjustwidth}{4.5in}{0in} 
+        \fi
+    \else
+        \begin{adjustwidth}{3in}{0in}
+    \fi
     \stepcounter{songblock}
-    \begin{adjustwidth}{3in}{0in}
-        #1
+                #1
     \end{adjustwidth}
     \setcounter{stanza}{0}
 }{}
 
-
-\newenvironment{lyricsa}{
-    \begin{adjustwidth}{0.5in}{0in}
-}{
-    \end{adjustwidth}
-}
-
-\newenvironment{lyricsb}{
-    \begin{adjustwidth}{1in}{0in}
-}{
-    \end{adjustwidth}
-}
-
-\newenvironment{lyricsc}{
+\newenvironment{lyricsintro}{
     \begin{adjustwidth}{1.5in}{0in}
 }{
     \end{adjustwidth}
 }
 
+\newenvironment{lyricsa}{
+    \ifdefined\intwocol\relax
+    \else
+        \begin{adjustwidth}{0.5in}{0in}
+    \fi
+}{
+    \ifdefined\intwocol\relax
+    \else
+        \end{adjustwidth}
+    \fi
+}
+
+\newenvironment{lyricsb}{
+    \ifdefined\intwocol\
+        \begin{adjustwidth}{0.3in}{0in}
+    \else
+        \begin{adjustwidth}{1in}{0in}
+    \fi
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{lyricsc}{
+    \ifdefined\intwocol\
+        \begin{adjustwidth}{0.6in}{0in}
+    \else
+        \begin{adjustwidth}{1.5in}{0in}
+    \fi
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocol}[2]{
+    \def\intwocol{}
+    \footnotesize
+    \begin{tabular}{p{0.5\textwidth}p{0.5\textwidth}}
+        \begin{leftcol}{#1}
+        \end{leftcol}
+        &
+        \begin{rightcol}{#2}
+        \end{rightcol}
+}{
+    \end{tabular}
+}
+
+\newenvironment{leftcol}[1]{
+    \def\leftcol{}
+    #1
+}
+
+\newenvironment{rightcol}[1]{
+    \def\rightcol{}
+    #1
+}
+
 \newenvironment{stanza}{
     \ifthenelse{\thestanza=0}{}{\br}
     \stepcounter{stanza}
-    \begin{itemize}[itemsep=0pt, parsep=0pt, partopsep=0pt, left=0pt, topsep=0pt, label=, labelsep=0pt]
+    \ifdefined\intwocol\relax
+        \begin{itemize}[itemsep=0pt, parsep=0pt, partopsep=0pt, left=0pt, topsep=0pt, label=, labelsep=0pt, labelindent=0.3in, itemindent=-0.3in]
+    \else
+        \begin{itemize}[itemsep=0pt, parsep=0pt, partopsep=0pt, left=0pt, topsep=0pt, label=, labelsep=0pt, labelindent=0.5in, itemindent=-0.5in]
+    \fi
 }{
     \end{itemize}
 }
